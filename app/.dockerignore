@@ -1,0 +1,8 @@
+.ollama/logs/
+.ollama/history
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.venv

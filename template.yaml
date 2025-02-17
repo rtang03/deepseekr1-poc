@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.12.3
+
+  Sample SAM Template for FastAPI
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+    Tracing: Disabled
+  Api:
+    TracingEnabled: false
+
+Resources:
+  FastAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 3076
+      # Environment:
+      #   Variables:
+      #     AWS_LWA_INVOKE_MODE: RESPONSE_STREAM
+      FunctionUrlConfig:
+        AuthType: NONE
+        # InvokeMode: RESPONSE_STREAM
+      Runtime: python3.9
+      Timeout: 900
+      Architectures:
+      - x86_64
+      Events:
+        ApiEvents:
+          Type: HttpApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./app
+      DockerTag: python3.12-v3
+
+Outputs:
+  # FastAPIFunctionUrl:
+  #   Description: "Function URL for FastAPI function"
+  #   Value: !GetAtt FastAPIFunctionUrl.FunctionUrl
+  FastAPIURL:
+    Description: "API Gateway endpoint URL for Prod stage for FastAPI function"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
+  FastAPIFunction:
+    Description: "FastAPI Lambda Function ARN"
+    Value: !GetAtt FastAPIFunction.Arn
+  FastAPIIamRole:
+    Description: "Implicit IAM Role created for FastAPI function"
+    Value: !GetAtt FastAPIFunctionRole.Arn
